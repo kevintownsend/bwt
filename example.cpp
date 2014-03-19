@@ -8,5 +8,6 @@ int main(){
     char buffer[] = "gataca";
     vector<char> original(buffer, buffer + sizeof(buffer));
     bwtEncode(original.begin(), original.end());
+
     return 0;
 }

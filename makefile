@@ -4,4 +4,4 @@ example : example.cpp bwt.hpp
 	g++ -g -o example example.cpp
 
 check : example
-	gdb example
+	example

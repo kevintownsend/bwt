@@ -42,6 +42,7 @@ RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator 
                 treeAdd(root, &tree[i]);
             }
             cerr << "here" << endl;
+            tmp = first;
             dfs(root);
         }
         private:
@@ -125,12 +126,23 @@ RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator 
                 return !leftPath.back();
             }
         }
+        RandomAccessIterator tmp;
         void dfs(Node* n){
             if(n == NULL)
                 return;
             dfs(n->left);
             //cerr << first[n - &tree[0]] << endl;
             cerr << "in order" << endl;
+            if(&tree.front() == n)
+                cerr << "found key" << endl;
+            else{
+                cerr << "error: " << endl;
+                cerr << "n: " << n->value << endl;
+                cerr << "n - 1: " << (n-1)->value << endl;
+                *tmp = (n-1)->value;
+                tmp++;
+            }
+
             dfs(n->right);
         }
     };

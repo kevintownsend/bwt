@@ -1,4 +1,5 @@
 #include <vector>
+#include <map>
 #include <iostream>
 #include <stdint.h>
 #include <cassert>
@@ -149,5 +150,27 @@ RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator 
     encodeHelper eh(first, last);
     return first;
 }
-void bwtDecode(){return;};
+template<class RandomAccessIterator>
+void bwtDecode(RandomAccessIterator first, RandomAccessIterator last, RandomAccessIterator key){
+    using namespace std;
+    //TODO: copy input
+    map<typename RandomAccessIterator::value_type,uint64_t> sums;
+    map<typename RandomAccessIterator::value_type,uint64_t> cummulativeSum;
+    uint64_t keyIndex = key - first;
+    uint64_t sum = 0;
+    for(auto i = first; i != last; i++){
+        sums[*i]++;
+    }
+    for(auto& p : sums){
+        cummulativeSum[p.first] = sum;
+        sum += p.second;
+    }
+    vector<uint64_t> fmIndex;
+    for(auto it = first; it != last; it++){
+        uint64_t index = commulativeSum[*it];
+        if(index > keyIndex)
+            index--;
 
+    }
+    return;
+}

@@ -153,7 +153,10 @@ RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator 
 template<class RandomAccessIterator>
 void bwtDecode(RandomAccessIterator first, RandomAccessIterator last, RandomAccessIterator key){
     using namespace std;
-    //TODO: copy input
+    vector<typename RandomAccessIterator::value_type> bwtEncoded(first, last);
+    typename RandomAccessIterator::value_type empty;
+    bwtEncoded.insert(bwtEncoded.begin() + (key-first), empty);
+    RandomAccessIterator bwtEncodedKey = bwtEncoded.begin() + (key - first);
     map<typename RandomAccessIterator::value_type,uint64_t> sums;
     map<typename RandomAccessIterator::value_type,uint64_t> cummulativeSum;
     uint64_t keyIndex = key - first;
@@ -167,7 +170,7 @@ void bwtDecode(RandomAccessIterator first, RandomAccessIterator last, RandomAcce
     }
     vector<uint64_t> fmIndex;
     for(auto it = first; it != last; it++){
-        uint64_t index = commulativeSum[*it];
+        uint64_t index = cummulativeSum[*it];
         if(index > keyIndex)
             index--;
 

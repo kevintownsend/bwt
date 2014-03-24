@@ -27,6 +27,8 @@ RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator 
         RandomAccessIterator first;
         RandomAccessIterator last;
         uint64_t originalSize;
+        public:
+        RandomAccessIterator key;
 
         //void treeAdd(Node* root, Node* newNode);
         public:
@@ -42,7 +44,6 @@ RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator 
             for(int i = originalSize - 1; i >= 0; i--){
                 treeAdd(root, &tree[i]);
             }
-            cerr << "here" << endl;
             tmp = first;
             dfs(root);
         }
@@ -85,7 +86,6 @@ RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator 
             return true;
         }
         bool compareInTree(Node* left, Node* right){
-            cerr << "compare in tree" << endl;
             vector<bool> leftPath;
             Node* current = left;
             while(current->parent != NULL){
@@ -132,14 +132,9 @@ RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator 
             if(n == NULL)
                 return;
             dfs(n->left);
-            //cerr << first[n - &tree[0]] << endl;
-            cerr << "in order" << endl;
-            if(&tree.front() == n)
-                cerr << "found key" << endl;
-            else{
-                cerr << "error: " << endl;
-                cerr << "n: " << n->value << endl;
-                cerr << "n - 1: " << (n-1)->value << endl;
+            if(&tree.front() == n){
+                key = tmp;
+            }else{
                 *tmp = (n-1)->value;
                 tmp++;
             }
@@ -148,7 +143,7 @@ RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator 
         }
     };
     encodeHelper eh(first, last);
-    return first;
+    return eh.key;
 }
 template<class RandomAccessIterator>
 void bwtDecode(RandomAccessIterator first, RandomAccessIterator last, RandomAccessIterator key){
@@ -169,11 +164,19 @@ void bwtDecode(RandomAccessIterator first, RandomAccessIterator last, RandomAcce
         sum += p.second;
     }
     vector<uint64_t> fmIndex;
-    for(auto it = first; it != last; it++){
-        uint64_t index = cummulativeSum[*it];
-        if(index > keyIndex)
-            index--;
-
+    for(auto it = bwtEncoded.begin(); it != bwtEncoded.end(); it++){
+        if(it == bwtEncodedKey){
+            fmIndex.push_back(last-first);
+        }else{
+            uint64_t index = cummulativeSum[*it];
+            fmIndex.push_back(index);
+            cummulativeSum[*it]++;
+        }
     }
+    auto tmp = last - 1;
+    for(auto trav = bwtEncoded.end()-1; trav != bwtEncodedKey; trav = bwtEncoded.begin() + fmIndex[trav - bwtEncoded.begin()]){
+        *tmp-- = *trav;
+    }
+    assert(tmp+1 == first);
     return;
 }

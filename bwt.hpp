@@ -3,17 +3,20 @@
 #include <iostream>
 #include <stdint.h>
 #include <cassert>
-
-template <class RandomAccessIterator>
-RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator last);
-void bwtDecode();
-
+namespace townsend {
+    namespace algorithm {
+        template <typename RandomAccessIterator>
+        RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator last);
+        template <typename RandomAccessIterator>
+        void bwtDecode(RandomAccessIterator first, RandomAccessIterator last, RandomAccessIterator key);
+    }
+}
 //implementation
 //template <class RandomAccessIterator>
 
 
 template <class RandomAccessIterator>
-RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator last){
+RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, RandomAccessIterator last){
     using namespace std;
     class encodeHelper{
         struct Node{
@@ -146,7 +149,7 @@ RandomAccessIterator bwtEncode(RandomAccessIterator first, RandomAccessIterator 
     return eh.key;
 }
 template<class RandomAccessIterator>
-void bwtDecode(RandomAccessIterator first, RandomAccessIterator last, RandomAccessIterator key){
+void townsend::algorithm::bwtDecode(RandomAccessIterator first, RandomAccessIterator last, RandomAccessIterator key){
     using namespace std;
     vector<typename RandomAccessIterator::value_type> bwtEncoded(first, last);
     typename RandomAccessIterator::value_type empty;

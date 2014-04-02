@@ -1,9 +1,10 @@
-#include "bwt.hpp"
 #include <vector>
 #include <string>
 #include <cstring>
+#include "bwt.hpp"
 
 using namespace std;
+using namespace townsend::algorithm;
 
 int main(int argc, char* argv[]){
     if(argc != 2){

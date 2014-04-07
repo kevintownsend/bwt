@@ -5,3 +5,6 @@ example : example.cpp bwt.hpp
 
 check : example
 	example gataca
+
+clean :
+	rm -rf *.o *.exe example *.stackdump

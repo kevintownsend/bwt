@@ -13,6 +13,6 @@ $(REFERENCE_GENOME) :
 	wget $(FTP)/technical/reference/$(REFERENCE_GENOME)
 
 %.fasta : %.fasta.gz
-	gunzip -c $<
+	gunzip -c $< > $@
 
 human_g1k_v37.fasta : $(REFERENCE_GENOME)

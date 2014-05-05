@@ -1,5 +1,6 @@
 check : human_g1k_v37.fasta
 	head human_g1k_v37.fasta
+	../example
 	
 
 # Uncomment if you are in the Americas (the US, etc.)

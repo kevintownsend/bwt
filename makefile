@@ -6,5 +6,8 @@ example : example.cpp bwt.hpp
 check : example
 	example gataca
 
+check2 : example
+	example -f dna
+
 clean :
 	rm -rf *.o *.exe example *.stackdump

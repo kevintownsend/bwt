@@ -1,17 +1,33 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <cstring>
+#include <fstream>
 #include "bwt.hpp"
 
 using namespace std;
 using namespace townsend::algorithm;
 
 int main(int argc, char* argv[]){
-    if(argc != 2){
+    vector<char> original(argv[1], argv[1] + strlen(argv[1]));
+    if(argc == 3){
+        if(string(argv[1]) == "-f"){
+            original.clear();
+            ifstream file(argv[2]);
+            while(!file.eof()){
+                char c = file.get();
+                if(c == '\n') break;
+                original.push_back(c);
+            }
+            file.close();
+        }else{
+            cerr << "usage: " << argv[0] << " gataca" << endl;
+            return 1;
+        }
+    }else if(argc != 2){
         cerr << "usage: " << argv[0] << " gataca" << endl;
         return 1;
     }
-    vector<char> original(argv[1], argv[1] + strlen(argv[1]));
     auto key = bwtEncode(original.begin(), original.end());
     for(auto it = original.begin(); it != original.end(); it++){
         if(it == key)

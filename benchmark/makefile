@@ -17,3 +17,5 @@ $(REFERENCE_GENOME) :
 	gunzip -c $< > $@
 
 human_g1k_v37.fasta : $(REFERENCE_GENOME)
+
+#TODO: file with no \n and no first line

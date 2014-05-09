@@ -1,6 +1,7 @@
-check : human_g1k_v37.fasta
-	head human_g1k_v37.fasta
-	../example
+check : human_g1k_v37.raw
+	time head -c 100 human_g1k_v37.raw | ../example
+	#this takes too long because of bad worst case performance
+	#time head -c 1000 human_g1k_v37.raw | ../example
 	
 
 # Uncomment if you are in the Americas (the US, etc.)
@@ -18,4 +19,11 @@ $(REFERENCE_GENOME) :
 
 human_g1k_v37.fasta : $(REFERENCE_GENOME)
 
-#TODO: file with no \n and no first line
+human_g1k_v37.raw : human_g1k_v37.fasta removeReturn
+	grep -e "^[^>]" < human_g1k_v37.fasta | removeReturn > human_g1k_v37.raw
+
+removeReturn : removeReturn.c
+	gcc -o removeReturn removeReturn.c
+
+clean:
+	rm -rf *.fasta

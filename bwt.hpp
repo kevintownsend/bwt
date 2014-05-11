@@ -15,9 +15,14 @@
  */
 #include <vector>
 #include <map>
+#include <algorithm>
 #include <iostream>
 #include <stdint.h>
 #include <cassert>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
 namespace townsend {
     namespace algorithm {
         template <typename RandomAccessIterator>
@@ -35,11 +40,11 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
     using namespace std;
     class encodeHelper{
         struct Node{
-            //typename RandomAccessIterator::value_type value;
             typename RandomAccessIterator::value_type value;
             Node* parent;
             Node* left;
             Node* right;
+            int treeHeight;
         };
         vector<Node> tree;
         RandomAccessIterator first;
@@ -48,7 +53,6 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
         public:
         RandomAccessIterator key;
 
-        //void treeAdd(Node* root, Node* newNode);
         public:
         encodeHelper(RandomAccessIterator first, RandomAccessIterator last){
             this->first = first;
@@ -60,13 +64,14 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
             }
             Node* root = &tree.back();
             for(int i = originalSize - 1; i >= 0; i--){
-                treeAdd(root, &tree[i]);
+                root=treeAdd(root, &tree[i]);
             }
             tmp = first;
             dfs(root);
+            checkHeights(root);
         }
         private:
-        void treeAdd(Node* root, Node* newNode){
+        Node* treeAdd(Node* root, Node* newNode){
             assert(root != NULL);
             assert(newNode != NULL);
             bool isLesser = compare(newNode, root);
@@ -74,16 +79,22 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
                 if(root->left == NULL){
                     root->left = newNode;
                     newNode->parent = root;
+                    newNode->treeHeight = 1;
                 }else
                     treeAdd(root->left, newNode);
             }else{
                 if(root->right == NULL){
                     root->right = newNode;
                     newNode->parent = root;
+                    newNode->treeHeight = 1;
                 }else
                     treeAdd(root->right, newNode);
             }
+            setHeight(root);
+            //TODO: balance
+            return avlBalance(root);
         }
+
         bool compare(Node* left, Node* right){
             uint64_t leftIndex = left - &tree[0];
             uint64_t rightIndex = right - &tree[0];
@@ -158,6 +169,101 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
             }
 
             dfs(n->right);
+        }
+        void checkHeights(Node* n){
+            int leftHeight=0;
+            int rightHeight=0;
+            if(n->left != NULL){
+                checkHeights(n->left);
+                leftHeight=n->left->treeHeight;
+            }
+            if(n->right != NULL){
+                checkHeights(n->right);
+                rightHeight=n->right->treeHeight;
+            }
+            assert(n->treeHeight == max(leftHeight,rightHeight) + 1);
+        }
+        void setHeight(Node* n){
+            int leftHeight=0;
+            int rightHeight=0;
+            if(n->left != NULL){
+                leftHeight=n->left->treeHeight;
+            }
+            if(n->right != NULL){
+                rightHeight=n->right->treeHeight;
+            }
+            n->treeHeight = max(leftHeight,rightHeight) + 1;
+        }
+        Node* avlBalance(Node* n){
+            while(abs(childrenHeightDiff(n)) > 1){
+                if(childrenHeightDiff(n) < 1){
+                    if(childrenHeightDiff(n->left) > 0)
+                        rotLeft(n->left);
+                    n=rotRight(n);
+                }else{
+                    assert(childrenHeightDiff(n) > 1);
+                    if(childrenHeightDiff(n->right) > 0)
+                        rotLeft(n->right);
+                    n=rotLeft(n);
+                }
+            }
+            return n;
+            
+        }
+        int childrenHeightDiff(Node* n){
+            int leftHeight=0;
+            int rightHeight=0;
+            if(n->left != NULL){
+                leftHeight=n->left->treeHeight;
+            }
+            if(n->right != NULL){
+                rightHeight=n->right->treeHeight;
+            }
+            return rightHeight - leftHeight;
+        }
+        Node* rotLeft(Node* n){
+            Node* p = n->parent;
+            assert(n->right != NULL);
+            Node* r = n->right;
+            Node* f = r->left;
+            r->left = n;
+            n->parent = r;
+            n->right = f;
+            if(f != NULL)
+                f->parent=n;
+            r->parent=p;
+            if(p!=NULL){
+                if(p->left==n)
+                    p->left=r;
+                else{
+                    assert(p->right==n);
+                    p->right=r;}
+            }
+            setHeight(r->left);
+            setHeight(r);
+            return r;
+        }
+        Node* rotRight(Node* n){
+            Node* p = n->parent;
+            assert(n->left != NULL);
+            Node* l = n->left;
+            Node* f = l->right;
+            l->right = n;
+            n->parent = l;
+            n->left = f;
+            if(f != NULL)
+                f->parent=n;
+            l->parent=p;
+            if(p!=NULL){
+                if(p->right==n)
+                    p->right=l;
+                else{
+                    assert(p->left==n);
+                    p->left=l;}
+            }
+            setHeight(l->right);
+            setHeight(l);
+            return l;
         }
     };
     encodeHelper eh(first, last);

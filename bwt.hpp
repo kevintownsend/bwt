@@ -46,10 +46,10 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
             Node* right;
             int treeHeight;
         };
-        vector<Node> tree;
         RandomAccessIterator first;
         RandomAccessIterator last;
         uint64_t originalSize;
+        vector<Node> tree;
         public:
         RandomAccessIterator key;
 
@@ -96,8 +96,8 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
         }
 
         bool compare(Node* left, Node* right){
-            uint64_t leftIndex = left - &tree[0];
-            uint64_t rightIndex = right - &tree[0];
+            size_t leftIndex = left - &tree[0];
+            size_t rightIndex = right - &tree[0];
             if(leftIndex == originalSize)
                 return false;
             if(rightIndex == originalSize)
@@ -283,9 +283,9 @@ void townsend::algorithm::bwtDecode(RandomAccessIterator first, RandomAccessIter
     for(auto i = first; i != last; i++){
         sums[*i]++;
     }
-    for(auto& p : sums){
-        cummulativeSum[p.first] = sum;
-        sum += p.second;
+    for(auto it = sums.begin();it != sums.end();it++){
+        cummulativeSum[it->first] = sum;
+        sum += it->second;
     }
     vector<uint64_t> fmIndex;
     for(auto it = bwtEncoded.begin(); it != bwtEncoded.end(); it++){

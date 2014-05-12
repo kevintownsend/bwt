@@ -1,10 +1,12 @@
-check : human_g1k_v37.raw
-	time head -c 100 human_g1k_v37.raw | ../example
-	time head -c 1000 human_g1k_v37.raw | ../example
-	time head -c 10000 human_g1k_v37.raw | ../example
-	time head -c 100000 human_g1k_v37.raw | ../example
-	time head -c 1000000 human_g1k_v37.raw | ../example
-	time head -c 10000000 human_g1k_v37.raw | ../example
+prefix=/var/tmp/
+
+check : $(prefix)human_g1k_v37.raw
+	time head -c 100 $(prefix)human_g1k_v37.raw | ../example
+	time head -c 1000 $(prefix)human_g1k_v37.raw | ../example
+	time head -c 10000 $(prefix)human_g1k_v37.raw | ../example
+	time head -c 100000 $(prefix)human_g1k_v37.raw | ../example
+	time head -c 1000000 $(prefix)human_g1k_v37.raw | ../example
+	time head -c 10000000 $(prefix)human_g1k_v37.raw | ../example
 	#memory issues on 32bit machine
 	#time head -c 100000000 human_g1k_v37.raw | ../example
 	
@@ -16,16 +18,18 @@ FTP = ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp
 
 REFERENCE_GENOME = human_g1k_v37.fasta.gz
 
-$(REFERENCE_GENOME) :
+$(prefix)$(REFERENCE_GENOME) :
 	wget $(FTP)/technical/reference/$(REFERENCE_GENOME)
+	mv $(REFERENCE_GENOME) $(prefix)$(REFERENCE_GENOME)
+    
 
 %.fasta : %.fasta.gz
 	gunzip -c $< > $@
 
-human_g1k_v37.fasta : $(REFERENCE_GENOME)
+$(prefix)human_g1k_v37.fasta : $(prefix)$(REFERENCE_GENOME)
 
-human_g1k_v37.raw : human_g1k_v37.fasta removeReturn
-	grep -e "^[^>]" < human_g1k_v37.fasta | removeReturn > human_g1k_v37.raw
+$(prefix)human_g1k_v37.raw : $(prefix)human_g1k_v37.fasta removeReturn
+	grep -e "^[^>]" < $(prefix)human_g1k_v37.fasta | removeReturn > $(prefix)human_g1k_v37.raw
 
 removeReturn : removeReturn.c
 	gcc -o removeReturn removeReturn.c

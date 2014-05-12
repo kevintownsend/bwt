@@ -1,7 +1,12 @@
 check : human_g1k_v37.raw
 	time head -c 100 human_g1k_v37.raw | ../example
-	#this takes too long because of bad worst case performance
-	#time head -c 1000 human_g1k_v37.raw | ../example
+	time head -c 1000 human_g1k_v37.raw | ../example
+	time head -c 10000 human_g1k_v37.raw | ../example
+	time head -c 100000 human_g1k_v37.raw | ../example
+	time head -c 1000000 human_g1k_v37.raw | ../example
+	time head -c 10000000 human_g1k_v37.raw | ../example
+	#memory issues on 32bit machine
+	#time head -c 100000000 human_g1k_v37.raw | ../example
 	
 
 # Uncomment if you are in the Americas (the US, etc.)

@@ -50,16 +50,20 @@ int main(int argc, char* argv[]){
         return 1;
     }
     auto key = bwtEncode(original.begin(), original.end());
-    for(auto it = original.begin(); it != original.end(); it++){
-        if(it == key)
-            cout << "$";
-        cout << *it;
+    if(original.size() <= 1000){
+        for(auto it = original.begin(); it != original.end(); it++){
+            if(it == key)
+                cout << "$";
+            cout << *it;
+        }
+        cout << endl;
     }
-    cout << endl;
     bwtDecode(original.begin(), original.end(), key);
-    for(auto it = original.begin(); it != original.end(); it++){
-        cout << *it;
+    if(original.size() <= 1000){
+        for(auto it = original.begin(); it != original.end(); it++){
+            cout << *it;
+        }
+        cout << endl;
     }
-    cout << endl;
     return 0;
 }

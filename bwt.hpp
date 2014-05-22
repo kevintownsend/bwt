@@ -49,7 +49,7 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
         RandomAccessIterator first;
         RandomAccessIterator last;
         uint64_t originalSize;
-        vector<Node> tree;
+        Node* tree;
         public:
         RandomAccessIterator key;
 
@@ -58,17 +58,20 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
             this->first = first;
             this->last = last;
             originalSize = last-first;
-            tree.resize(originalSize+1);
+            tree = new Node[originalSize+1];
             for(int64_t i = 0; i < originalSize; i++){
                 tree[i].value = first[i];
             }
-            Node* root = &tree.back();
+            Node* root = tree + originalSize;
             for(int i = originalSize - 1; i >= 0; i--){
                 root=treeAdd(root, &tree[i]);
             }
             tmp = first;
             dfs(root);
             checkHeights(root);
+        }
+        ~encodeHelper(){
+            delete [] tree;
         }
         private:
         Node* treeAdd(Node* root, Node* newNode){
@@ -161,7 +164,7 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
             if(n == NULL)
                 return;
             dfs(n->left);
-            if(&tree.front() == n){
+            if(tree == n){
                 key = tmp;
             }else{
                 *tmp = (n-1)->value;

@@ -1,4 +1,4 @@
-prefix=/var/tmp/
+prefix=
 
 check : $(prefix)human_g1k_v37.raw
 	time head -c 100 $(prefix)human_g1k_v37.raw | ../example
@@ -8,7 +8,7 @@ check : $(prefix)human_g1k_v37.raw
 	time head -c 1000000 $(prefix)human_g1k_v37.raw | ../example
 	time head -c 10000000 $(prefix)human_g1k_v37.raw | ../example
 	#memory issues on 32bit machine
-	#time head -c 100000000 human_g1k_v37.raw | ../example
+	time head -c 100000000 human_g1k_v37.raw | ../example
 	
 
 # Uncomment if you are in the Americas (the US, etc.)

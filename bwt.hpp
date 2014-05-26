@@ -31,9 +31,6 @@ namespace townsend {
         void bwtDecode(RandomAccessIterator first, RandomAccessIterator last, RandomAccessIterator key);
     }
 }
-//implementation
-//template <class RandomAccessIterator>
-
 
 template <class RandomAccessIterator>
 RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, RandomAccessIterator last){
@@ -94,7 +91,6 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
                     treeAdd(root->right, newNode);
             }
             setHeight(root);
-            //TODO: balance
             return avlBalance(root);
         }
 

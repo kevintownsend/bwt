@@ -1,3 +1,0 @@
-This implements the Borrows-Wheeler Transform. See the example for usage. Templates are used so any data type should work.
-
-The algorithm is rather space hungry. The current implementation takes about 16N bytes for the 32bit implementation and 32N bytes for the 64bit implementation. (N is the size of the sequence being transformed.)

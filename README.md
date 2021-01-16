@@ -5,7 +5,8 @@ This is a C++ implementation of the Burrows wheeler transform.
 
 Overview
 --------
-###Burrows Wheeler Transform###
+### Burrows Wheeler Transform
+
 The Burrows Wheeler transform is a near 1 to 1 transformation. It has many uses, in particular data compressiond and data retrieval. It's used in bzip and the DNA aligner bowtie.
 
 Concisely, the transformation is the concatenation of the last elements of the cyclic rotations of the original sequence.

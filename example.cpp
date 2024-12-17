@@ -23,6 +23,7 @@
 using namespace std;
 using namespace townsend::algorithm;
 
+// TODO(kevintownsend): Rename example file to better describe a text file bwt program.
 int main(int argc, char* argv[]){
     vector<char> original;
     if(argc == 3){

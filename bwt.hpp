@@ -23,6 +23,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <cmath>
+
+// TODO(kevintownsend): Remove/rename townsend namespace.
 namespace townsend {
     namespace algorithm {
         template <typename RandomAccessIterator>
@@ -32,6 +34,7 @@ namespace townsend {
     }
 }
 
+// TODO:(kevintownsend): Rewrite this attrocity.
 template <class RandomAccessIterator>
 RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, RandomAccessIterator last){
     using namespace std;
@@ -207,7 +210,7 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
                 }
             }
             return n;
-            
+
         }
         int childrenHeightDiff(Node* n){
             int leftHeight=0;
@@ -268,6 +271,7 @@ RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, 
     encodeHelper eh(first, last);
     return eh.key;
 }
+
 template<class RandomAccessIterator>
 void townsend::algorithm::bwtDecode(RandomAccessIterator first, RandomAccessIterator last, RandomAccessIterator key){
     using namespace std;

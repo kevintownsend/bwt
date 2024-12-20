@@ -24,6 +24,13 @@
 #include <cstring>
 #include <cmath>
 
+#ifndef BWT_H_
+#define BWT_H_
+
+namespace bwt {
+  std::pair<std::vector<char>, char*> charBwt(char* first, char* last);
+}
+
 // TODO(kevintownsend): Remove/rename townsend namespace.
 namespace townsend {
     namespace algorithm {
@@ -34,7 +41,7 @@ namespace townsend {
     }
 }
 
-// TODO:(kevintownsend): Rewrite this attrocity.
+// TODO:(kevintownsend): Rewrite this.
 template <class RandomAccessIterator>
 RandomAccessIterator townsend::algorithm::bwtEncode(RandomAccessIterator first, RandomAccessIterator last){
     using namespace std;
@@ -307,3 +314,5 @@ void townsend::algorithm::bwtDecode(RandomAccessIterator first, RandomAccessIter
     assert(tmp+1 == first);
     return;
 }
+
+#endif // BWT_H_

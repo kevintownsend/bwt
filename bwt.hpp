@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#ifndef BWT_H_
+#define BWT_H_
+
 #include <vector>
 #include <map>
 #include <algorithm>
@@ -23,9 +26,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <cmath>
-
-#ifndef BWT_H_
-#define BWT_H_
 
 namespace bwt {
   std::pair<std::vector<char>, char*> charBwt(char* first, char* last);

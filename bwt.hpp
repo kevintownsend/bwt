@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Kevin Townsend
+ * Copyright 2024 Kevin Townsend
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef BWT_H_
 #define BWT_H_
 
@@ -28,7 +29,10 @@
 #include <cmath>
 
 namespace bwt {
-  std::pair<std::vector<char>, char*> charBwt(char* first, char* last);
+  std::pair<std::vector<char>, size_t> charBwt(char* first, char* last);
+
+  std::pair<std::vector<char>, size_t> charBwt(std::vector<char>::iterator first, std::vector<char>::iterator last);
+  std::vector<char> iCharBwt(const std::vector<char> &encoded_bwt, const size_t key);
 }
 
 // TODO(kevintownsend): Remove/rename townsend namespace.

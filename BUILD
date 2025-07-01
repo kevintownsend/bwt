@@ -1,6 +1,6 @@
 cc_library(
   name = "bwt",
-  srcs = [],
+  srcs = ["bwt.cc"],
   hdrs = ["bwt.hpp"],
 )
 

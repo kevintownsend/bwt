@@ -1,5 +1,7 @@
 #include "rand_int_benchmark.h"
 
+#include "bwt.hpp"
+
 #include <vector>
 #include <cstdint>
 #include <random>
@@ -7,7 +9,12 @@
 
 bool rand_int_benchmark(int n){
   //Create a random array of size n.
-  create_pseudo_random_ints(n);
+  std::vector<uint32_t> values = create_pseudo_random_ints(n);
+  //TODO(kevintownsend): bwt transform
+  auto key = townsend::algorithm::bwtEncode(values.begin(), values.end());
+  //TODO(kevintownsend): ibwt
+  //townsend::algorithm::bwtDecode(values.begin(), values.end(), key);
+  //TODO(kevintownsend): assert equal
   return true;
 }
 

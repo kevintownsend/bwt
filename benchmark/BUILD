@@ -1,11 +1,10 @@
-# TODO: Add rand_int_benchmark
 cc_library(
   name = "rand_int_benchmark",
   srcs = ["rand_int_benchmark.cc"],
   hdrs = ["rand_int_benchmark.h"],
+  deps = ["//:bwt"],
 )
 
-# rand_int_benchmark_test
 cc_test(
   name = "rand_int_benchmark_test",
   srcs = ["rand_int_benchmark_test.cc"],
@@ -16,7 +15,6 @@ cc_test(
   ]
 )
 
-# rand_int_benchmark_bin
 cc_binary(
   name = "rand_int_benchmark_bin",
   srcs = ["rand_int_benchmark_bin.cc"],

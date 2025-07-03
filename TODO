@@ -1,3 +1,2 @@
-TODO: add decode test.
-TODO: Don't return iterator for a key, use uint64_t.
 TODO(kevintownsend): Add cmake.
+TODO(kevintownsend): Add large uint32_t benchmark to mark issue 5 as done.

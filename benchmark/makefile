@@ -9,7 +9,6 @@ check : $(prefix)human_g1k_v37.raw
 	time head -c 10000000 $(prefix)human_g1k_v37.raw | ../example
 	#memory issues on 32bit machine
 	time head -c 100000000 human_g1k_v37.raw | ../example
-	
 
 # Uncomment if you are in the Americas (the US, etc.)
 FTP = ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp
@@ -21,7 +20,6 @@ REFERENCE_GENOME = human_g1k_v37.fasta.gz
 $(prefix)$(REFERENCE_GENOME) :
 	wget $(FTP)/technical/reference/$(REFERENCE_GENOME)
 	mv $(REFERENCE_GENOME) $(prefix)$(REFERENCE_GENOME)
-    
 
 %.fasta : %.fasta.gz
 	gunzip -c $< > $@

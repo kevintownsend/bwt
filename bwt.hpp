@@ -20,6 +20,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <set>
 #include <iostream>
 #include <stdint.h>
 #include <cassert>
@@ -33,6 +34,62 @@ namespace bwt {
 
   std::pair<std::vector<char>, size_t> charBwt(std::vector<char>::iterator first, std::vector<char>::iterator last);
   std::vector<char> iCharBwt(const std::vector<char> &encoded_bwt, const size_t key);
+
+template<class RandomAccessIterator>
+std::pair<std::vector<typename std::iterator_traits<RandomAccessIterator>::value_type>, size_t> bwt(
+    RandomAccessIterator first,
+    RandomAccessIterator last
+  );
+  /*
+  template <typename RandomAccessIterator>
+  RandomAccessIterator bwt(RandomAccessIterator first, RandomAccessIterator last);
+  */
+}
+
+/**
+ * The templated Burrows-Wheeler tranform.
+ *
+ * @param first Pointer to the first value.
+ * @param last Pointer to the one over last value.
+ * @return The encoded vector and relative location of the end character.
+ */
+template<class RandomAccessIterator>
+std::pair<std::vector<typename std::iterator_traits<RandomAccessIterator>::value_type>, size_t> bwt::bwt(
+    RandomAccessIterator first,
+    RandomAccessIterator last
+  ){
+  typedef typename std::iterator_traits<RandomAccessIterator>::value_type T;
+  size_t n = last - first;
+  if(n == 0) {
+    return make_pair(std::vector<T>(), 0);
+  }
+
+  // Get counts.
+  std::map<T, size_t> counts;
+  for(auto it = first; it != last; it++) {
+    counts[*it]++;
+  }
+
+  // Create prefix sums.
+  std::map<T, size_t> offsets;
+  size_t sum = 0;
+  for(auto it = counts.begin(); it != counts.end(); it++) {
+    offsets[it->first] = sum;
+    sum += it->second;
+  }
+  for(auto it = ++offsets.find(*first); it != offsets.end(); it++) {
+    it->second--;
+  }
+
+  // Create the return vector (the bwt transformation).
+
+  std::vector<T> ret(n);
+  for(size_t i = 0; i < n - 1; ++i) {
+    ret[offsets[first[i + 1]]++] = first[i];
+  }
+  ret[n - 1] = first[n - 1];
+
+  return make_pair(ret, offsets[first[0]]);
 }
 
 // TODO(kevintownsend): Remove/rename townsend namespace.

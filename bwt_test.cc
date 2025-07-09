@@ -30,3 +30,24 @@ TEST(CharBwtTest, BananaCharBwt) {
   ASSERT_EQ(banana, decoded_str);
 
 }
+
+//TODO: add test for template bwt test.
+
+TEST(Bwt, Empty) {
+  std::vector<int> empty;
+  bwt::bwt(empty.begin(), empty.end());
+}
+
+TEST(Bwt, Small) {
+  std::vector<int> small = {5, 1, 2, 1, 2};
+  std::vector<int> ret;
+  size_t key;
+  std::tie(ret, key) = bwt::bwt(small.begin(), small.end());
+  std::cerr << "return:\n";
+  std::cerr << ret[0] << "\n";
+  ASSERT_EQ(key, 4);
+  std::vector<int> expected = {5, 2, 1, 1, 2};
+  ASSERT_EQ(ret, expected);
+
+  // TODO: check.
+}

@@ -31,8 +31,6 @@ TEST(CharBwtTest, BananaCharBwt) {
 
 }
 
-//TODO: add test for template bwt test.
-
 TEST(Bwt, Empty) {
   std::vector<int> empty;
   bwt::bwt(empty.begin(), empty.end());
@@ -49,5 +47,18 @@ TEST(Bwt, Small) {
   std::vector<int> expected = {5, 2, 1, 1, 2};
   ASSERT_EQ(ret, expected);
 
-  // TODO: check.
+}
+
+//TODO: add inverse bwt test
+TEST(IBwt, Small) {
+  std::vector<int> small = {5, 2, 1, 1, 2};
+  size_t key = 4;
+  bool success;
+  std::vector<int> ret;
+  std::tie(ret, success) = bwt::iBwt(small.begin(), small.end(), key);
+
+  ASSERT_TRUE(success);
+
+  std::vector<int> expected = {5, 1, 2, 1, 2};
+  ASSERT_EQ(ret, expected);
 }

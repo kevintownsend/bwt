@@ -40,10 +40,9 @@ std::pair<std::vector<typename std::iterator_traits<RandomAccessIterator>::value
     RandomAccessIterator first,
     RandomAccessIterator last
   );
-  /*
+
   template <typename RandomAccessIterator>
-  RandomAccessIterator bwt(RandomAccessIterator first, RandomAccessIterator last);
-  */
+  std::pair<std::vector<typename std::iterator_traits<RandomAccessIterator>::value_type>, bool> iBwt(RandomAccessIterator first, RandomAccessIterator last, const size_t key);
 }
 
 /**
@@ -90,6 +89,49 @@ std::pair<std::vector<typename std::iterator_traits<RandomAccessIterator>::value
   ret[n - 1] = first[n - 1];
 
   return make_pair(ret, offsets[first[0]]);
+}
+
+/**
+ * The templated inverse Burrows-Wheeler tranform.
+ *
+ * @param first Pointer to the first value.
+ * @param last Pointer to the one over last value.
+ * @param the location of the end character.
+ * @return The decoded vector and success boolean.
+ */
+template <typename RandomAccessIterator>
+std::pair<std::vector<typename std::iterator_traits<RandomAccessIterator>::value_type>, bool> bwt::iBwt(RandomAccessIterator first, RandomAccessIterator last, const size_t key){
+  typedef typename std::iterator_traits<RandomAccessIterator>::value_type T;
+  size_t n = last - first;
+  std::vector<T> ret(n);
+
+  // Get counts.
+  std::map<T, size_t> counts;
+  for(auto it = first; it != last; it++) {
+    counts[*it]++;
+  }
+
+  // Create prefix sums.
+  std::map<T, size_t> offsets;
+  size_t sum = 0;
+  for(auto it = counts.begin(); it != counts.end(); it++) {
+    sum += it->second;
+    offsets[it->first] = sum;
+  }
+
+  // Decoding
+  size_t curr_offset = n;
+  for(size_t i = 0; i < n; i++) {
+    if(curr_offset == key){
+      return make_pair(std::vector<T>(), false);
+    }
+    size_t effective_offset = (curr_offset > key) ? curr_offset - 1 : curr_offset;
+    T c = first[effective_offset];
+    ret[n - i - 1] = c;
+    curr_offset = --offsets[c];
+  }
+
+  return make_pair(ret, true);
 }
 
 // TODO(kevintownsend): Remove/rename townsend namespace.

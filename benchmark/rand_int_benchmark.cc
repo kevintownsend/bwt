@@ -10,11 +10,26 @@
 bool rand_int_benchmark(int n){
   //Create a random array of size n.
   std::vector<uint32_t> values = create_pseudo_random_ints(n);
-  //TODO(kevintownsend): bwt transform
-  auto key = townsend::algorithm::bwtEncode(values.begin(), values.end());
-  //TODO(kevintownsend): ibwt
-  //townsend::algorithm::bwtDecode(values.begin(), values.end(), key);
+
+  // bwt transform
+  // TODO: time
+  std::vector<uint32_t> encoded_values;
+  size_t key;
+  std::tie(encoded_values, key) = bwt::bwt(values.begin(), values.end());
+
+  // ibwt
+  std::vector<uint32_t> decoded_values;
+  bool success;
+
+  //TODO: time
+  std::tie(decoded_values, success) = bwt::iBwt(encoded_values.begin(), encoded_values.end(), key);
   //TODO(kevintownsend): assert equal
+  if(!success)
+    return false;
+  for(size_t i = 0; i < values.size(); i++) {
+    if(values[i] != decoded_values[i])
+      return false;
+  }
   return true;
 }
 

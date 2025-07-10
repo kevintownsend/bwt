@@ -13,7 +13,10 @@ TEST(CreateInts, Small) {
   ASSERT_EQ(random_ints[0], 282475248);
 }
 
-//TODO(kevintownsend): This test fails with segfault.
-// TEST(RandIntBenchmark, Empty) {
-//  rand_int_benchmark(0);
-//}
+TEST(RandIntBenchmark, Empty) {
+  ASSERT_TRUE(rand_int_benchmark(0));
+}
+
+TEST(RandIntBenchmark, Small) {
+  ASSERT_TRUE(rand_int_benchmark(3));
+}

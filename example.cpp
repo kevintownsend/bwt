@@ -21,7 +21,6 @@
 #include "bwt.hpp"
 
 using namespace std;
-using namespace townsend::algorithm;
 
 // TODO(kevintownsend): Rename example file to better describe a text file bwt program.
 int main(int argc, char* argv[]){
@@ -50,16 +49,18 @@ int main(int argc, char* argv[]){
         cerr << "usage: " << argv[0] << " gataca" << endl;
         return 1;
     }
-    auto key = bwtEncode(original.begin(), original.end());
+    size_t key;
+    std::tie(original, key) = bwt::bwt(original.begin(), original.end());
     if(original.size() <= 1000){
         for(auto it = original.begin(); it != original.end(); it++){
-            if(it == key)
+            if(it == (original.begin() + key))
                 cout << "$";
             cout << *it;
         }
         cout << endl;
     }
-    bwtDecode(original.begin(), original.end(), key);
+    bool success;
+    std::tie(original, success) = bwt::iBwt(original.begin(), original.end(), key);
     if(original.size() <= 1000){
         for(auto it = original.begin(); it != original.end(); it++){
             cout << *it;

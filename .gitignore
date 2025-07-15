@@ -1,0 +1,12 @@
+.bazelrc
+MODULE.bazel.lock
+bazel-bin
+bazel-bwt
+bazel-out
+bazel-testlogs
+benchmark/human_g1k_v37.fasta
+benchmark/human_g1k_v37.fasta.gz
+benchmark/human_g1k_v37.raw
+benchmark/removeReturn
+example
+

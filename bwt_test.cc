@@ -5,7 +5,6 @@
 TEST(CharBwtTest, EmptyCharBwt) {
   std::vector<char> empty;
   bwt::charBwt(&*empty.begin(), &*empty.end());
-
 }
 
 TEST(ICharBwtTest, EmptyICharBwt) {
@@ -28,7 +27,6 @@ TEST(CharBwtTest, BananaCharBwt) {
   std::vector<char> decoded_str = bwt::iCharBwt(ret, key);
 
   ASSERT_EQ(banana, decoded_str);
-
 }
 
 TEST(Bwt, Empty) {
@@ -46,10 +44,9 @@ TEST(Bwt, Small) {
   ASSERT_EQ(key, 4);
   std::vector<int> expected = {5, 2, 1, 1, 2};
   ASSERT_EQ(ret, expected);
-
 }
 
-//TODO: add inverse bwt test
+// TODO: add inverse bwt test
 TEST(IBwt, Small) {
   std::vector<int> small = {5, 2, 1, 1, 2};
   size_t key = 4;

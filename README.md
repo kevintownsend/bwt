@@ -19,7 +19,7 @@ Because the transformation has one extra EOL character a key pointing to where t
 Here are the function signatiures:
 
 ```c++
-template <class RandomAccessIterator>
+template <typename RandomAccessIterator>
 std::pair<std::vector<
               typename std::iterator_traits<RandomAccessIterator>::value_type>,
           size_t>

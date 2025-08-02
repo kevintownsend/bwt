@@ -32,29 +32,24 @@ std::pair<std::vector<
 iBwt(RandomAccessIterator first, RandomAccessIterator last, const size_t key);
 ```
 
-## Complexity
-
-Put simply the complexity is O(NlogN2). With dictionaries that do not repeat many value the complexity would be O(NlogN).
-
-## Design Considerations
-There are papers describing better algorithms. If this is your field, I am happy for suggestions.
+Copying bwt.hpp should enable you to use these two functions.
 
 ## Contributing
 
-Clone the repo
+If you want to contribute you can file an issue. Submit a change request by forking the
+repo and issuing a pull request to the main branch.
+
+Clone the repo:
 
 ```bash
 git clone https://github.com/kevintownsend/bwt.git
 ```
 
-prequerisites
+prerequisites to run tests:
 [install bazel](https://bazel.build/install)
 
-run tests
+run tests:
 
 ```bash
 bazel test :all
 ```
-
-submit a pull request. File an issue. Submit a change request by forking the
-repo and issuing a pull request to the main branch.

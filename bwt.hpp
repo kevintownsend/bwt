@@ -37,7 +37,7 @@ std::pair<std::vector<char>, size_t> charBwt(std::vector<char>::iterator first,
 std::vector<char> iCharBwt(const std::vector<char> &encoded_bwt,
                            const size_t key);
 
-template <class RandomAccessIterator>
+template <typename RandomAccessIterator>
 std::pair<std::vector<
               typename std::iterator_traits<RandomAccessIterator>::value_type>,
           size_t>
@@ -57,7 +57,7 @@ iBwt(RandomAccessIterator first, RandomAccessIterator last, const size_t key);
  * @param last Pointer to the one over last value.
  * @return The encoded vector and relative location of the end character.
  */
-template <class RandomAccessIterator>
+template <typename RandomAccessIterator>
 std::pair<std::vector<
               typename std::iterator_traits<RandomAccessIterator>::value_type>,
           size_t>

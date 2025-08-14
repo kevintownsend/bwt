@@ -1,3 +1,5 @@
+![tests](https://github.com/kevintownsend/bwt/actions/workflows/ci.yml/badge.svg)
+
 # A C++ Burrows Wheeler Transform Library
 
 This is a C++ implementation of the Burrows wheeler transform.

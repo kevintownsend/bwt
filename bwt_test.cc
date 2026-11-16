@@ -150,10 +150,12 @@ TEST(BwtEncodeDecode, SupportsContainersLiteralsPointersAndEmbeddedNulls) {
   ASSERT_TRUE(lit_dec.has_value());
   EXPECT_EQ(std::string(lit_dec->begin(), lit_dec->end()), "banana");
 
-  // Raw C pointer pair and std::string_view.
+  // Raw C pointer pair, C string pointer, and std::string_view.
   const char raw[] = {'g', 'a', 't', 'a', 'c', 'a'};
   EXPECT_EQ(bwt::encode(raw, raw + 6),
             bwt::encode(std::string_view("gataca")));
+  const char *cstr = "banana";
+  EXPECT_EQ(bwt::encode(cstr), lit_enc);
 
   // std::string with embedded NUL bytes.
   const std::string with_nuls("\0a\0b\0", 5);
@@ -195,7 +197,7 @@ TEST(BwtEncodeDecode, HandlesLengthsExceedingByteThresholds) {
 }
 
 TEST(BwtEncodeDecode, ExhaustiveBinaryAgainstOracle) {
-  for (std::size_t len = 0; len <= 9; ++len) {
+  for (std::size_t len = 0; len <= 10; ++len) {
     const std::size_t total = std::size_t{1} << len;
     for (std::size_t mask = 0; mask < total; ++mask) {
       std::vector<char> input(len);
@@ -227,7 +229,7 @@ TEST(BwtEncodeDecode, ExhaustiveTernaryAgainstOracle) {
 
 TEST(BwtEncodeDecode, RandomizedUint32AndByteAlphabetsAgainstOracle) {
   std::mt19937 rng(42);
-  for (std::size_t len : {1u, 2u, 7u, 16u, 64u, 128u, 257u}) {
+  for (std::size_t len : {1u, 2u, 7u, 16u, 64u, 128u, 257u, 512u}) {
     std::uniform_int_distribution<uint32_t> dist_small(0, 3);
     std::vector<uint32_t> v_small(len);
     for (std::size_t i = 0; i < len; ++i) {

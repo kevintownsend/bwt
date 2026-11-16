@@ -18,7 +18,7 @@ void print_header() {
   std::cout << std::string(101, '-') << '\n';
 }
 
-void print_row(const BenchmarkResult &r) {
+void print_row(const BenchmarkResult& r) {
   std::cout << std::left << std::setw(12) << r.name << std::right
             << std::setw(10) << r.elements << std::setw(11) << r.bytes
             << std::fixed << std::setprecision(2) << std::setw(11)
@@ -29,9 +29,9 @@ void print_row(const BenchmarkResult &r) {
             << std::setw(8) << (r.verified ? "OK" : "FAIL") << '\n';
 }
 
-} // namespace
+}  // namespace
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   bool quick = false;
   for (int i = 1; i < argc; ++i) {
     const std::string_view arg(argv[i]);
@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
         run_uint8_benchmark("low_bin", create_low_entropy_binary(n)),
         run_uint32_benchmark("rand_u32", create_pseudo_random_ints(n)),
     };
-    for (const BenchmarkResult &r : results) {
+    for (const BenchmarkResult& r : results) {
       print_row(r);
       all_ok = all_ok && r.verified;
     }

@@ -20,7 +20,7 @@ struct BenchmarkResult {
 };
 
 template <typename T>
-double average_run_length(const std::vector<T> &data) {
+double average_run_length(const std::vector<T>& data) {
   if (data.empty()) {
     return 0.0;
   }
@@ -40,13 +40,13 @@ std::vector<char> create_repetitive_text(std::size_t n);
 std::vector<uint8_t> create_low_entropy_binary(std::size_t n,
                                                uint32_t seed = 42);
 
-BenchmarkResult run_char_benchmark(const std::string &name,
-                                   const std::vector<char> &data);
-BenchmarkResult run_uint8_benchmark(const std::string &name,
-                                    const std::vector<uint8_t> &data);
-BenchmarkResult run_uint32_benchmark(const std::string &name,
-                                     const std::vector<uint32_t> &data);
+BenchmarkResult run_char_benchmark(const std::string& name,
+                                   const std::vector<char>& data);
+BenchmarkResult run_uint8_benchmark(const std::string& name,
+                                    const std::vector<uint8_t>& data);
+BenchmarkResult run_uint32_benchmark(const std::string& name,
+                                     const std::vector<uint32_t>& data);
 
 bool rand_int_benchmark(std::size_t n);
 
-#endif // BWT_BENCHMARK_RAND_INT_BENCHMARK_H_
+#endif  // BWT_BENCHMARK_RAND_INT_BENCHMARK_H_

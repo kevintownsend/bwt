@@ -42,11 +42,11 @@ struct Encoded {
   std::vector<T> data;
   std::size_t key = 0;
 
-  bool operator==(const Encoded &other) const {
+  bool operator==(const Encoded& other) const {
     return key == other.key && data == other.data;
   }
 
-  bool operator!=(const Encoded &other) const { return !(*this == other); }
+  bool operator!=(const Encoded& other) const { return !(*this == other); }
 };
 
 namespace detail {
@@ -65,8 +65,8 @@ struct is_less_comparable : std::false_type {};
 
 template <typename T>
 struct is_less_comparable<
-    T, std::void_t<decltype(static_cast<bool>(std::declval<const T &>() <
-                                              std::declval<const T &>()))>>
+    T, std::void_t<decltype(static_cast<bool>(std::declval<const T&>() <
+                                              std::declval<const T&>()))>>
     : std::true_type {};
 
 template <typename Range, typename = void>
@@ -74,13 +74,13 @@ struct is_random_access_range : std::false_type {};
 
 template <typename Range>
 struct is_random_access_range<
-    Range, std::void_t<decltype(std::begin(std::declval<const Range &>())),
-                       decltype(std::end(std::declval<const Range &>()))>>
+    Range, std::void_t<decltype(std::begin(std::declval<const Range&>())),
+                       decltype(std::end(std::declval<const Range&>()))>>
     : std::integral_constant<
           bool, !std::is_array_v<std::remove_reference_t<Range>> &&
-                    !std::is_convertible_v<const Range &, std::string_view> &&
+                    !std::is_convertible_v<const Range&, std::string_view> &&
                     is_random_access_it_v<decltype(std::begin(
-                        std::declval<const Range &>()))>> {};
+                        std::declval<const Range&>()))>> {};
 
 template <typename T>
 inline std::size_t byte_bucket(T value) {
@@ -91,9 +91,8 @@ inline std::size_t byte_bucket(T value) {
 
 // Builds the suffix array of [0..n] (where index n is the unique minimal '$')
 // via O(n log n) prefix doubling with stable counting sorts.
-inline std::vector<std::size_t>
-suffix_array_from_ranks(std::vector<std::size_t> &rank,
-                        std::size_t alphabet_size) {
+inline std::vector<std::size_t> suffix_array_from_ranks(
+    std::vector<std::size_t>& rank, std::size_t alphabet_size) {
   const std::size_t m = rank.size();
   std::vector<std::size_t> sa(m);
   std::vector<std::size_t> tmp(m);
@@ -158,10 +157,10 @@ suffix_array_from_ranks(std::vector<std::size_t> &rank,
 
 template <typename RandomAccessIt>
 std::size_t build_initial_ranks(RandomAccessIt first, std::size_t n,
-                                std::vector<std::size_t> &rank) {
+                                std::vector<std::size_t>& rank) {
   using T = typename std::iterator_traits<RandomAccessIt>::value_type;
   rank.resize(n + 1);
-  rank[n] = 0; // Reserve rank 0 for the virtual sentinel '$'.
+  rank[n] = 0;  // Reserve rank 0 for the virtual sentinel '$'.
 
   if constexpr (is_byte_integral_v<T>) {
     std::array<std::size_t, 256> char_rank{};
@@ -183,10 +182,9 @@ std::size_t build_initial_ranks(RandomAccessIt first, std::size_t n,
     for (std::size_t i = 0; i < n; ++i) {
       order[i] = i;
     }
-    std::sort(order.begin(), order.end(), [&first](std::size_t a,
-                                                   std::size_t b) {
-      return first[a] < first[b];
-    });
+    std::sort(
+        order.begin(), order.end(),
+        [&first](std::size_t a, std::size_t b) { return first[a] < first[b]; });
     std::size_t r = 1;
     rank[order[0]] = r;
     for (std::size_t i = 1; i < n; ++i) {
@@ -212,7 +210,7 @@ std::vector<std::size_t> build_lf_mapping(RandomAccessIt first, std::size_t n,
       ++counts[byte_bucket<T>(first[i])];
     }
     std::array<std::size_t, 256> offsets{};
-    std::size_t sum = 1; // Row 0 in F is reserved for the sentinel '$'.
+    std::size_t sum = 1;  // Row 0 in F is reserved for the sentinel '$'.
     for (std::size_t b = 0; b < 256; ++b) {
       offsets[b] = sum;
       sum += counts[b];
@@ -228,10 +226,9 @@ std::vector<std::size_t> build_lf_mapping(RandomAccessIt first, std::size_t n,
     for (std::size_t i = 0; i < n; ++i) {
       order[i] = i;
     }
-    std::stable_sort(order.begin(), order.end(), [&first](std::size_t a,
-                                                          std::size_t b) {
-      return first[a] < first[b];
-    });
+    std::stable_sort(
+        order.begin(), order.end(),
+        [&first](std::size_t a, std::size_t b) { return first[a] < first[b]; });
     for (std::size_t k = 0; k < n; ++k) {
       const std::size_t idx = order[k];
       const std::size_t row = (idx >= key) ? idx + 1 : idx;
@@ -241,7 +238,7 @@ std::vector<std::size_t> build_lf_mapping(RandomAccessIt first, std::size_t n,
   return lf;
 }
 
-} // namespace detail
+}  // namespace detail
 
 /**
  * Computes the forward Burrows-Wheeler transform of [first, last).
@@ -254,8 +251,8 @@ std::vector<std::size_t> build_lf_mapping(RandomAccessIt first, std::size_t n,
  * @return Encoded sequence (with '$' omitted) and the row index of '$'.
  */
 template <typename RandomAccessIt>
-Encoded<typename std::iterator_traits<RandomAccessIt>::value_type>
-encode(RandomAccessIt first, RandomAccessIt last) {
+Encoded<typename std::iterator_traits<RandomAccessIt>::value_type> encode(
+    RandomAccessIt first, RandomAccessIt last) {
   static_assert(detail::is_random_access_it_v<RandomAccessIt>,
                 "bwt::encode requires random-access iterators");
   using T = typename std::iterator_traits<RandomAccessIt>::value_type;
@@ -271,8 +268,7 @@ encode(RandomAccessIt first, RandomAccessIt last) {
   }
 
   std::vector<std::size_t> rank;
-  const std::size_t alphabet_size =
-      detail::build_initial_ranks(first, n, rank);
+  const std::size_t alphabet_size = detail::build_initial_ranks(first, n, rank);
   const std::vector<std::size_t> sa =
       detail::suffix_array_from_ranks(rank, alphabet_size);
 
@@ -292,9 +288,10 @@ encode(RandomAccessIt first, RandomAccessIt last) {
  * Computes the forward Burrows-Wheeler transform of a contiguous or
  * random-access range.
  */
-template <typename Range,
-          std::enable_if_t<detail::is_random_access_range<Range>::value, int> = 0>
-auto encode(const Range &input) {
+template <
+    typename Range,
+    std::enable_if_t<detail::is_random_access_range<Range>::value, int> = 0>
+auto encode(const Range& input) {
   return encode(std::begin(input), std::end(input));
 }
 
@@ -314,7 +311,8 @@ inline Encoded<char> encode(std::string_view input) {
  * @return The original sequence, or std::nullopt if key or payload is invalid.
  */
 template <typename RandomAccessIt>
-std::optional<std::vector<typename std::iterator_traits<RandomAccessIt>::value_type>>
+std::optional<
+    std::vector<typename std::iterator_traits<RandomAccessIt>::value_type>>
 decode(RandomAccessIt first, RandomAccessIt last, std::size_t key) {
   static_assert(detail::is_random_access_it_v<RandomAccessIt>,
                 "bwt::decode requires random-access iterators");
@@ -363,9 +361,10 @@ decode(RandomAccessIt first, RandomAccessIt last, std::size_t key) {
 /**
  * Inverts a Burrows-Wheeler encoded range produced by bwt::encode.
  */
-template <typename Range,
-          std::enable_if_t<detail::is_random_access_range<Range>::value, int> = 0>
-auto decode(const Range &encoded, std::size_t key) {
+template <
+    typename Range,
+    std::enable_if_t<detail::is_random_access_range<Range>::value, int> = 0>
+auto decode(const Range& encoded, std::size_t key) {
   return decode(std::begin(encoded), std::end(encoded), key);
 }
 
@@ -381,10 +380,10 @@ inline std::optional<std::vector<char>> decode(std::string_view encoded,
  * Convenience overload to decode directly from an Encoded<T>.
  */
 template <typename T>
-std::optional<std::vector<T>> decode(const Encoded<T> &encoded) {
+std::optional<std::vector<T>> decode(const Encoded<T>& encoded) {
   return decode(encoded.data, encoded.key);
 }
 
-} // namespace bwt
+}  // namespace bwt
 
-#endif // BWT_HPP_
+#endif  // BWT_HPP_

@@ -1,3 +1,5 @@
+#include "bwt.hpp"
+
 #include <gtest/gtest.h>
 
 #include <algorithm>
@@ -12,12 +14,10 @@
 #include <string_view>
 #include <vector>
 
-#include "bwt.hpp"
-
 namespace {
 
 template <typename T>
-bwt::Encoded<T> naive_bwt(const std::vector<T> &input) {
+bwt::Encoded<T> naive_bwt(const std::vector<T>& input) {
   const std::size_t n = input.size();
   if (n == 0) {
     return bwt::Encoded<T>{};
@@ -32,7 +32,7 @@ bwt::Encoded<T> naive_bwt(const std::vector<T> &input) {
         continue;
       }
       if (pa == n) {
-        return true; // '$' is strictly smaller than every element of T.
+        return true;  // '$' is strictly smaller than every element of T.
       }
       if (pb == n) {
         return false;
@@ -60,7 +60,7 @@ bwt::Encoded<T> naive_bwt(const std::vector<T> &input) {
 }
 
 template <typename T>
-void expect_matches_oracle_and_roundtrips(const std::vector<T> &input) {
+void expect_matches_oracle_and_roundtrips(const std::vector<T>& input) {
   const bwt::Encoded<T> expected = naive_bwt(input);
   const bwt::Encoded<T> actual = bwt::encode(input);
   EXPECT_EQ(actual, expected);
@@ -73,13 +73,13 @@ void expect_matches_oracle_and_roundtrips(const std::vector<T> &input) {
 struct NonDefaultItem {
   int val;
   explicit NonDefaultItem(int v) : val(v) {}
-  bool operator<(const NonDefaultItem &other) const { return val < other.val; }
-  bool operator==(const NonDefaultItem &other) const {
+  bool operator<(const NonDefaultItem& other) const { return val < other.val; }
+  bool operator==(const NonDefaultItem& other) const {
     return val == other.val;
   }
 };
 
-} // namespace
+}  // namespace
 
 TEST(BwtEncodeDecode, EmptyInputs) {
   const std::vector<int> empty_ints;
@@ -117,7 +117,7 @@ TEST(BwtEncodeDecode, TextbookGoldenCases) {
       {"abacab", "bcbaaa", 2},
       {"abracadabra", "ardrcaaaabb", 3},
   };
-  for (const auto &c : cases) {
+  for (const auto& c : cases) {
     const auto [data, key] = bwt::encode(c.input);
     EXPECT_EQ(std::string(data.begin(), data.end()), c.expected_bwt)
         << "input=" << c.input;
@@ -152,9 +152,8 @@ TEST(BwtEncodeDecode, SupportsContainersLiteralsPointersAndEmbeddedNulls) {
 
   // Raw C pointer pair, C string pointer, and std::string_view.
   const char raw[] = {'g', 'a', 't', 'a', 'c', 'a'};
-  EXPECT_EQ(bwt::encode(raw, raw + 6),
-            bwt::encode(std::string_view("gataca")));
-  const char *cstr = "banana";
+  EXPECT_EQ(bwt::encode(raw, raw + 6), bwt::encode(std::string_view("gataca")));
+  const char* cstr = "banana";
   EXPECT_EQ(bwt::encode(cstr), lit_enc);
 
   // std::string with embedded NUL bytes.
@@ -181,9 +180,8 @@ TEST(BwtEncodeDecode, SupportsContainersLiteralsPointersAndEmbeddedNulls) {
 
 TEST(BwtEncodeDecode, HandlesSignedAndBinaryBytes) {
   const std::vector<char> binary = {
-      static_cast<char>(0x80), static_cast<char>(0xFF),
-      static_cast<char>(0x00), static_cast<char>(0x7F),
-      static_cast<char>(0x80), static_cast<char>(0x00),
+      static_cast<char>(0x80), static_cast<char>(0xFF), static_cast<char>(0x00),
+      static_cast<char>(0x7F), static_cast<char>(0x80), static_cast<char>(0x00),
       static_cast<char>(0xFF),
   };
   expect_matches_oracle_and_roundtrips(binary);

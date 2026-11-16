@@ -14,8 +14,8 @@
 namespace {
 
 template <typename T>
-BenchmarkResult run_benchmark_impl(const std::string &name,
-                                   const std::vector<T> &data) {
+BenchmarkResult run_benchmark_impl(const std::string& name,
+                                   const std::vector<T>& data) {
   BenchmarkResult result;
   result.name = name;
   result.elements = data.size();
@@ -28,24 +28,22 @@ BenchmarkResult run_benchmark_impl(const std::string &name,
   const std::optional<std::vector<T>> decoded = bwt::decode(encoded);
   const auto t2 = std::chrono::steady_clock::now();
 
-  result.encode_ms =
-      std::chrono::duration<double, std::milli>(t1 - t0).count();
-  result.decode_ms =
-      std::chrono::duration<double, std::milli>(t2 - t1).count();
-  result.encode_mb_per_s = (result.encode_ms > 0.0)
-                               ? (static_cast<double>(result.bytes) /
-                                  (result.encode_ms * 1e3))
-                               : 0.0;
-  result.decode_mb_per_s = (result.decode_ms > 0.0)
-                               ? (static_cast<double>(result.bytes) /
-                                  (result.decode_ms * 1e3))
-                               : 0.0;
+  result.encode_ms = std::chrono::duration<double, std::milli>(t1 - t0).count();
+  result.decode_ms = std::chrono::duration<double, std::milli>(t2 - t1).count();
+  result.encode_mb_per_s =
+      (result.encode_ms > 0.0)
+          ? (static_cast<double>(result.bytes) / (result.encode_ms * 1e3))
+          : 0.0;
+  result.decode_mb_per_s =
+      (result.decode_ms > 0.0)
+          ? (static_cast<double>(result.bytes) / (result.decode_ms * 1e3))
+          : 0.0;
   result.avg_run_after = average_run_length(encoded.data);
   result.verified = decoded.has_value() && (*decoded == data);
   return result;
 }
 
-} // namespace
+}  // namespace
 
 std::vector<uint32_t> create_pseudo_random_ints(std::size_t n, uint32_t seed) {
   std::vector<uint32_t> values(n);
@@ -60,7 +58,10 @@ std::vector<uint32_t> create_pseudo_random_ints(std::size_t n, uint32_t seed) {
 
 std::vector<char> create_repetitive_dna(std::size_t n, uint32_t seed) {
   static constexpr std::string_view kMotifs[] = {
-      "GATTACA", "ATATCGAT", "CGCGTACG", "TTGACAA",
+      "GATTACA",
+      "ATATCGAT",
+      "CGCGTACG",
+      "TTGACAA",
   };
   static constexpr char kBases[] = "ACGT";
   std::mt19937 rng(seed);
@@ -113,21 +114,22 @@ std::vector<uint8_t> create_low_entropy_binary(std::size_t n, uint32_t seed) {
   return data;
 }
 
-BenchmarkResult run_char_benchmark(const std::string &name,
-                                   const std::vector<char> &data) {
+BenchmarkResult run_char_benchmark(const std::string& name,
+                                   const std::vector<char>& data) {
   return run_benchmark_impl(name, data);
 }
 
-BenchmarkResult run_uint8_benchmark(const std::string &name,
-                                    const std::vector<uint8_t> &data) {
+BenchmarkResult run_uint8_benchmark(const std::string& name,
+                                    const std::vector<uint8_t>& data) {
   return run_benchmark_impl(name, data);
 }
 
-BenchmarkResult run_uint32_benchmark(const std::string &name,
-                                     const std::vector<uint32_t> &data) {
+BenchmarkResult run_uint32_benchmark(const std::string& name,
+                                     const std::vector<uint32_t>& data) {
   return run_benchmark_impl(name, data);
 }
 
 bool rand_int_benchmark(std::size_t n) {
-  return run_uint32_benchmark("rand_u32", create_pseudo_random_ints(n)).verified;
+  return run_uint32_benchmark("rand_u32", create_pseudo_random_ints(n))
+      .verified;
 }

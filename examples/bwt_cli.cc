@@ -27,18 +27,18 @@
 
 namespace {
 
-void print_usage(std::ostream &out, const char *prog) {
+void print_usage(std::ostream& out, const char* prog) {
   out << "Usage: " << prog << " [<text> | -f <path>]\n"
       << "Reads stdin when no arguments are given.\n";
 }
 
-bool read_all_bytes(std::istream &in, std::vector<char> &out) {
+bool read_all_bytes(std::istream& in, std::vector<char>& out) {
   out.assign(std::istreambuf_iterator<char>(in),
              std::istreambuf_iterator<char>());
   return !in.bad();
 }
 
-void print_encoded_preview(const bwt::Encoded<char> &encoded) {
+void print_encoded_preview(const bwt::Encoded<char>& encoded) {
   if (encoded.data.size() > 1000) {
     return;
   }
@@ -54,9 +54,9 @@ void print_encoded_preview(const bwt::Encoded<char> &encoded) {
   std::cout.put('\n');
 }
 
-} // namespace
+}  // namespace
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   std::vector<char> input;
 
   if (argc == 1) {

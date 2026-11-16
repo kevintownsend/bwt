@@ -1,9 +1,9 @@
+#include "benchmark/rand_int_benchmark.h"
+
 #include <gtest/gtest.h>
 
 #include <cstdint>
 #include <vector>
-
-#include "benchmark/rand_int_benchmark.h"
 
 TEST(CreateInts, Empty) {
   ASSERT_EQ(std::vector<uint32_t>(), create_pseudo_random_ints(0));

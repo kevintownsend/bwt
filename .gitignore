@@ -4,5 +4,6 @@ bazel-bin
 bazel-bwt
 bazel-out
 bazel-testlogs
-example
+build/
+cmake-build-*/
 

@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <vector>
-#include <string>
-#include <cstring>
+#include <cstdio>
 #include <cstring>
 #include <fstream>
+#include <iostream>
+#include <optional>
+#include <string>
+#include <vector>
 #include "bwt.hpp"
 
 using namespace std;
@@ -49,20 +51,20 @@ int main(int argc, char* argv[]){
         cerr << "usage: " << argv[0] << " gataca" << endl;
         return 1;
     }
-    size_t key;
-    std::tie(original, key) = bwt::bwt(original.begin(), original.end());
-    if(original.size() <= 1000){
-        for(auto it = original.begin(); it != original.end(); it++){
-            if(it == (original.begin() + key))
+    const auto encoded = bwt::encode(original);
+    if(encoded.data.size() <= 1000){
+        for(auto it = encoded.data.begin(); it != encoded.data.end(); it++){
+            if(it == (encoded.data.begin() + encoded.key))
                 cout << "$";
             cout << *it;
         }
+        if(encoded.key == encoded.data.size())
+            cout << "$";
         cout << endl;
     }
-    bool success;
-    std::tie(original, success) = bwt::iBwt(original.begin(), original.end(), key);
-    if(original.size() <= 1000){
-        for(auto it = original.begin(); it != original.end(); it++){
+    const auto decoded = bwt::decode(encoded);
+    if(decoded && decoded->size() <= 1000){
+        for(auto it = decoded->begin(); it != decoded->end(); it++){
             cout << *it;
         }
         cout << endl;

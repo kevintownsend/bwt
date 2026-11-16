@@ -3,7 +3,6 @@ load("@rules_cc//cc:cc_test.bzl", "cc_test")
 
 cc_library(
     name = "bwt",
-    srcs = ["bwt.cc"],
     hdrs = ["bwt.hpp"],
     visibility = ["//visibility:public"],
 )

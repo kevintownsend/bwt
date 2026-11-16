@@ -1,10 +1,70 @@
 name: ci
 
 on:
+  push:
+    branches: [master, development]
   pull_request:
-    branches: [master]
+    branches: [master, development]
 
 jobs:
+  bazel:
+    name: Bazel (Build, Test, Sanitizers)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.19.2
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+          cache-save: ${{ github.event_name != 'pull_request' }}
+
+      - name: Build all targets
+        run: bazel build //...
+
+      - name: Run unit tests
+        run: bazel test //... --test_output=errors
+
+      - name: Run tests with ASan and UBSan
+        run: >-
+          bazel test //...
+          --copt=-fsanitize=address,undefined
+          --linkopt=-fsanitize=address,undefined
+          --test_output=errors
+
+      - name: Smoke test CLI and benchmarks
+        run: |
+          bazel run //examples:bwt_cli -- gataca
+          bazel run -c opt //benchmark:rand_int_benchmark_bin -- --quick
+
+  cmake:
+    name: CMake (${{ matrix.cxx }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cxx: [g++, clang++]
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Configure
+        run: >-
+          cmake -B build
+          -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
+          -DBWT_WARNINGS_AS_ERRORS=ON
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
   style:
     name: Style
     runs-on: ubuntu-latest
@@ -13,4 +73,18 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-# TODO(kevintownsend): Complete style checks.
+      - name: Check C++ formatting
+        run: |
+          if ! command -v clang-format >/dev/null 2>&1; then
+            sudo apt-get update && sudo apt-get install -y clang-format
+          fi
+          clang-format --dry-run --Werror \
+            bwt.hpp bwt_test.cc examples/bwt_cli.cc \
+            benchmark/rand_int_benchmark.h benchmark/rand_int_benchmark.cc \
+            benchmark/rand_int_benchmark_bin.cc benchmark/rand_int_benchmark_test.cc
+
+      - name: Check Bazel formatting
+        run: |
+          curl -fsSL https://github.com/bazel-contrib/buildtools/releases/download/v10.2.0/buildifier-linux-amd64 -o /tmp/buildifier
+          chmod +x /tmp/buildifier
+          /tmp/buildifier -mode=check -lint=warn BUILD benchmark/BUILD examples/BUILD MODULE.bazel
